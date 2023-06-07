@@ -1,0 +1,49 @@
+{% from "macros/svgs.html" import moon, sun %}
+{% macro header(email, theme) %}
+
+<header class="header">
+    <div class="nav-container">
+        <a href="{{ url_for('pages.index') }}" class="header__logo">
+            <svg xmlns="http://www.w3.org/2000/svg" class="logo__icon" fill="none" viewBox="0 0 32 32" stroke="currentColor">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3.363 4.414l4.875 19.348 9.467-3.018-8.448-10.298 10.902 9.56 8.853-2.77-25.649-12.822zM18.004 27.586v-5.324l-3.116 0.926 3.116 4.398z">
+</svg> <span class="logo__name">Travel List</span>
+        </a>
+        <nav class="nav">
+            {% if not email %}
+                <a
+                    href="#"
+                    class="nav__link">
+                    <span class="nav__item">Log in</span> 
+                </a>
+                <a
+                    href="#"
+                    class="nav__link">
+                    <span class="nav__item">Register</span>
+                </a>
+            {% else %}
+                <a 
+                href="{{ url_for('pages.index') }}"
+                class="nav__link {{ 'nav__link--active' if request.path == url_for('pages.index') }}">
+                <span class="nav__item">Attractions</span>
+                </a>
+                <a
+                    href="#"
+                    class="nav__link">
+                    <span class="nav__item">Log out</span>
+                </a>
+            {% endif %}
+            <a href="{{ url_for('pages.toggle_theme', current_page=request.path) }}" class="nav__link">
+                <span class="nav__item">
+                    {% if theme == "dark" %}
+                        {{ sun("nav__icon") }}
+                    {% else %}
+                        {{ moon("nav__icon") }}
+                    {% endif %}   
+                </span>
+        
+        </a>
+
+        </nav>
+    </div>
+</header>
+{% endmacro %}

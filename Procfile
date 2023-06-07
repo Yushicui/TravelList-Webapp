@@ -1,0 +1,1 @@
+web: gunicorn "travel_library:create_app()"

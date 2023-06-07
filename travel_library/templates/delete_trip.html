@@ -1,0 +1,19 @@
+{% extends "layout.html" %}
+
+{% block head_content %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/delete_trip.css') }}" />
+{% endblock %}
+
+{% block main_content %}
+<div class="container">
+  <header>
+    <h1>Delete Trip</h1>
+    <p>Are you sure you want to delete the trip to 
+      <span class="highlight">{{ trip.attraction }} in {{ trip.city }}, {{ trip.country }}</span>?</p>
+    <form method="post">
+      <input type="submit" value="Yes, delete this trip" class="btn btn-danger">
+      <a href="{{ url_for('.index') }}" class="btn btn-secondary">Cancel</a>
+    </form>
+  </header>
+</div>
+{% endblock %}

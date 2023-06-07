@@ -1,0 +1,102 @@
+{% from "macros/svgs.html" import heart, pencil %}
+{% extends "layout.html" %}
+
+{% block head_content %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/trip_info.css') }}" />
+{% endblock %}
+
+{% block main_content %}
+<div class="container">
+    <header class="trip__header">
+        <div class="header__row">
+            <div class="trip__name">
+                <h1>{{ trip.attraction }}</h1>
+                <div class="trip__rating">
+                    {% for i in range(5) %}
+                        <a class="rating__link" href="{{ url_for('pages.rate_trip', _id=trip._id, rating=i+1) }}">
+                            {{ heart("heart " + ("heart--filled" if trip.rating > i else "")) }}
+                        </a>
+                    {% endfor %}
+                    <div>
+                        <a class="trip__edit" href="{{ url_for('pages.edit_trip', _id=trip._id) }}">Edit {{ pencil("pencil") }}</a>
+                    </div>
+                </div>            
+            </div>
+        </div>
+        <div class="header__row">
+            <ul class="trip__tags">
+                {% for tag in trip.tags %}
+                    <li class="trip__tag">{{ tag }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+    </header>
+
+{% if trip.video_link %}
+    <iframe
+        class="trip__video"
+        src="{{ trip.video_link }}"
+        title="YouTube video player"
+        frameborder="0"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+        allowfullscreen>
+    </iframe>
+{% endif %}
+
+{% if trip.description %}
+    <p class="trip__description">{{ trip.description }}</p>
+{% else %}
+    <p class="trip__description">No description yet. <a class="link" href="{{ url_for('pages.edit_trip', _id=trip._id) }}">Add one?</a></p>
+{% endif %}
+
+
+<div class="trip__meta">
+    {% if trip.best_season %}
+        <div class="trip__season">
+            <h2>Best Season</h2>
+            <ul class="list">
+            {% for season in trip.best_season %}
+                <li class="list__item">{{ season }}</li>
+            {% endfor %}
+            <ul>
+        </div>
+    {% endif %}
+    {% if trip.travel_days %}
+        <div class="trip__days">
+            <h2>Days Needed (Recommended)</h2>
+            <ul class="list">
+            {% for travel_days in trip.travel_days %}
+                <li class="list__item">{{ travel_days }}</li>
+            {% endfor %}
+            <ul>
+        </div>
+    {% endif %}
+</div>
+
+<div class="comment-form">
+    <form method="post" action="{{ url_for('pages.trip', _id=trip._id) }}">
+        <label for="comment">Add a comment:</label>
+        <textarea name="comment" rows="4" cols="50" required></textarea>
+        <input type="submit" value="Submit">
+    </form>
+</div>
+
+<div class="comments">
+    <h3>Comments:</h3>
+    {% if trip.comments %}
+        <ul>
+            {% for comment in trip.comments %}
+                <li>
+                    <div class="timestamp">{{ comment.timestamp }}</div>
+                    <div class="content">{{ comment.content }}</div>
+                    <form method="post" action="{{ url_for('pages.delete_comment', _id=trip._id, comment_index=loop.index0) }}" style="display:inline;">
+                        <input type="submit" value="Delete" class="delete-comment" />
+                    </form>
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>No comments yet. Be the first to comment!</p>
+    {% endif %}
+</div>
+{% endblock %}

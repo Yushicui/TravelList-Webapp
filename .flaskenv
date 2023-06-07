@@ -1,0 +1,2 @@
+FLASK_APP=travel_library
+FLASK_DEBUG=1

@@ -1,0 +1,53 @@
+{% extends "layout.html" %}
+
+{% block head_content %}
+    <link rel="stylesheet" href="{{url_for('static', filename='css/trips.css')}}">
+{% endblock %}
+
+{% block main_content %}
+
+    <div class="search-container">
+        <form method="post" action="{{ url_for('pages.search') }}">
+            <input type="text" name="query" placeholder="Search attraction, city, or country">
+            <input type="submit" value="Search">
+        </form>
+    </div>
+
+    {% if trip_data %}
+        <table class="table">
+            <colgroup>
+                <col style="width: 31%">
+                <col style="width: 24%">
+                <col style="width: 20%">
+                <col style="width: 15%">
+                <col style="width: 10%"> 
+            </colgroup>
+            <thead>
+                <tr class="tanle__header">
+                    <th class="table__cell table__cell--header">Attraction</th>
+                    <th class="table__cell table__cell--header">City</th>                   
+                    <th class="table__cell table__cell--header">Country</th>
+                    <th class="table__cell table__cell--header">Details</th>
+                    <th class="table__cell table__cell--header"></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for trip in trip_data %}
+                    <tr>
+                        <td class="table__cell">{{trip.attraction}}</td>
+                        <td class="table__cell">{{trip.city}}</td>                        
+                        <td class="table__cell">{{trip.country}}</td>
+                        <td class="table__cell"><a href="{{url_for('pages.trip', _id=trip._id)}}" class="table__link">View</a></td>
+                        <td class="table__cell"><a href="{{url_for('pages.delete_trip', _id=trip._id)}}" class="table__link">Delete</a></td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p class="table__empty">You haven't added any trips yet. <a href="{{ url_for('pages.add_trip')}}" class="link">Add one!</a></p>
+    {% endif %}
+    <a href="{{ url_for('pages.add_trip') }}" class="button button--add">
+        <span>+</span>
+    </a>
+ 
+{% endblock %}
